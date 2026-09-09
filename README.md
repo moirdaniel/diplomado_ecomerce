@@ -44,10 +44,44 @@ Se usa estado para navegar entre tienda y checkout. React Router no aporta valor
 - Boleta compuesta, impresión desde el navegador y reinicio mediante Volver a comprar.
 - Responsive, etiquetas accesibles, foco visible y movimiento reducido.
 
+## Componentes creados
+
+| Componente | Responsabilidad |
+| --- | --- |
+| Header y Navbar | Logo, nombre y navegación de la tienda. |
+| SearchBar | Campo de búsqueda controlado mediante props. |
+| Button, Badge y CartIcon | Botones reutilizables, etiquetas e icono del carrito. |
+| ProductCatalog y ProductFilters | Estado de búsqueda, categorías y ordenamiento. |
+| ProductGrid | Lista de productos con `map` y claves por ID; cumple el papel de ProductList. |
+| ProductCard | Nombre, precio, imagen y categoría recibidos mediante props. |
+| FeaturedProducts | Selección de productos destacados usando la misma grilla. |
+| Cart, CartItem y CartSummary | Productos elegidos, cantidades y total del carrito. |
+| Checkout y CheckoutSummary | Resumen de compra y elección del pago simulado. |
+| ReceiptPrinter y PaymentStatus | Etapas de procesamiento e impresión y estado del pago. |
+| Receipt, ReceiptHeader, ReceiptItem y ReceiptTotals | Composición y presentación de la boleta. |
+| Footer | Información básica del proyecto. |
+
+HomePage y CheckoutPage reúnen estos componentes en las dos vistas de la aplicación. Cada producto local incluye `id`, `name`, `price`, `category` e `image`; `price` agrupa precio regular y oferta opcional. `categoryId` relaciona la categoría con los filtros.
+
+## Capturas del resultado
+
+### Vista general del e-commerce
+
+![Catálogo de Moir Games con logo, categorías, productos y carrito](screenshots/catalogo.png)
+
+### Resumen y checkout
+
+![Checkout con producto seleccionado, desglose de IVA y medios de pago](screenshots/checkout.png)
+
+### Vista móvil
+
+<img src="screenshots/movil.png" alt="Catálogo de Moir Games en una pantalla móvil" width="390" />
+
 ## Organización de carpetas
 
 ```text
 config/             Configuración de TypeScript para aplicación y herramientas
+screenshots/        Capturas del resultado visibles en este README
 src/                Código de la aplicación y fotos de productos
 ```
 
@@ -174,6 +208,8 @@ La boleta es un comprobante de una compra simulada, sin validez tributaria. Impr
 - Inspiración conceptual de la impresora: [Receipt Printer de dqnamo](https://www.dqnamo.com/experiments/receipt-printer). Implementación propia con React y CSS, sin copiar su código.
 
 ## Imágenes
+
+El logo del control es un SVG creado para el proyecto en `src/assets/icons/moir-games-logo.svg`; Header lo importa como imagen independiente.
 
 Las fotos y portadas se guardan dentro de `src/assets/images/products/`. Pertenecen a sus respectivos titulares; no se declara una licencia libre de reproducción. Se utilizan como referencia en este proyecto académico, con precios y stock ficticios.
 
