@@ -1,0 +1,264 @@
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #f4f5f6;
+  background: #111315;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --surface: #1b1e22;
+  --border: #343b43;
+  --muted: #b0b7c1;
+  --accent: #c4f064;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 280px;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+h1 {
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  margin-bottom: 12px;
+}
+h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+p {
+  line-height: 1.55;
+}
+main {
+  max-width: 1440px;
+  margin: auto;
+  padding: 36px 32px 64px;
+  min-height: calc(100vh - 175px);
+}
+.store-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 28px;
+  align-items: start;
+}
+.store-content {
+  min-width: 0;
+}
+.intro {
+  padding: 0 0 24px;
+}
+.intro p,
+.page-description {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+#catalogo,
+#carrito,
+#inicio,
+#main-content {
+  scroll-margin-top: 100px;
+}
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  margin: 26px 0 18px;
+}
+.section-heading h2 {
+  margin: 0;
+}
+.section-heading span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 15px;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition:
+    background-color 0.16s,
+    border-color 0.16s;
+}
+.button--primary {
+  background: var(--accent);
+  color: #172009;
+}
+.button--primary:hover:not(:disabled) {
+  background: #d6ff83;
+}
+.button--secondary {
+  background: #20252b;
+  border-color: var(--border);
+  color: #f4f5f6;
+}
+.button--secondary:hover:not(:disabled) {
+  background: #30373f;
+}
+.button--danger {
+  background: transparent;
+  color: #ffaaa7;
+  padding: 7px;
+}
+.button--danger:hover {
+  background: #42252a;
+}
+.full-width {
+  width: 100%;
+}
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #19280c;
+  background: var(--accent);
+  padding: 6px 9px;
+  border-radius: 5px;
+}
+input[type="search"],
+select {
+  width: 100%;
+  background: #1b1f24;
+  color: #f4f5f6;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-height: 46px;
+  font-size: 0.9rem;
+}
+input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+input[type="radio"] {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+}
+.muted,
+small {
+  color: var(--muted);
+}
+.panel {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  min-width: 0;
+}
+.empty-state {
+  padding: 50px 24px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 99;
+  background: var(--accent);
+  color: #111;
+  padding: 12px;
+}
+.skip-link:focus {
+  top: 8px;
+}
+@media (max-width: 1150px) {
+  .store-layout {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 20px;
+  }
+}
+@media (max-width: 850px) {
+  .store-layout {
+    grid-template-columns: 1fr;
+  }
+  main {
+    padding: 28px 20px 48px;
+  }
+}
+@media (max-width: 480px) {
+  main {
+    padding: 24px 16px 40px;
+  }
+  .section-heading {
+    align-items: start;
+  }
+  .section-heading span {
+    text-align: right;
+  }
+}
+@media (max-width: 520px) {
+  #catalogo,
+  #carrito,
+  #inicio,
+  #main-content {
+    scroll-margin-top: 145px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* La secuencia conserva su orden, pero el movimiento visual es inmediato. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 350px) {
+  #catalogo, #carrito, #inicio, #main-content {
+    scroll-margin-top: 180px;
+  }
+}
