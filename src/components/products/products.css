@@ -142,3 +142,9 @@
     max-height: 240px;
   }
 }
+
+.product-category {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+}

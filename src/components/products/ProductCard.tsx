@@ -38,6 +38,7 @@ export function ProductCard({
       </div>
       <div className="product-content">
         <p className="platform">{product.platform}</p>
+        <p className="product-category">Categoría: {product.category}</p>
         <h3>{product.name}</h3>
         <p className="product-description">{product.description}</p>
         <p className={product.stock ? "stock" : "stock stock--empty"}>

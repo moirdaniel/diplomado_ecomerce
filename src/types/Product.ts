@@ -20,6 +20,8 @@ export interface Product {
   platform: Platform;
   // Relaciona el producto con una entrada de data/categories.ts.
   categoryId: number;
+  // Nombre visible de la categoría, incluido en los datos de cada producto.
+  category: string;
   // Límite por carrito en esta demo; no hay inventario compartido entre compras.
   stock: number;
   // Solo los productos marcados aparecen también en destacados.
