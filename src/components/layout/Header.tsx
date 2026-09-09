@@ -2,6 +2,7 @@ import { Button } from "../common/Button";
 import { CartIcon } from "../common/CartIcon";
 import { Navbar } from "./Navbar";
 import "./layout.css";
+import logo from "../../assets/icons/moir-games-logo.svg";
 
 // count llega del carrito compartido. busy impide abandonar la compra
 // mientras se muestra la simulación; App decide cuándo activar ese bloqueo.
@@ -33,7 +34,9 @@ export function Header({
             if (!busy) onHome();
           }}
         >
-          MOIR <span>GAMES</span>
+          {/* El nombre junto al símbolo ya identifica la tienda. */}
+          <img className="brand-logo" src={logo} alt="" width="40" height="40" />
+          <span className="brand-name">MOIR <span>GAMES</span></span>
         </a>
         <Navbar onHome={onHome} onCatalog={onCatalog} disabled={busy} />
         <Button
