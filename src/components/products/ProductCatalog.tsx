@@ -1,17 +1,26 @@
 import { useState } from "react";
-import { products } from "../../data/products";
+import type { ProductsController } from "../../hooks/useProducts";
+import { Loader } from "../common/Loader";
+import { ErrorMessage } from "../common/ErrorMessage";
 import type { CartController } from "../../hooks/useCart";
 import { getProductPrice } from "../../utils/order";
 import { ProductFilters } from "./ProductFilters";
 import type { ProductSort } from "./ProductFilters";
-import { ProductGrid } from "./ProductGrid";
+import { ProductList } from "./ProductList";
 
 // Los filtros pertenecen al catálogo y no afectan a los destacados.
-export function ProductCatalog({ cart }: { cart: CartController }) {
-
+export function ProductCatalog({
+  cart,
+  catalog,
+}: {
+  cart: CartController;
+  catalog: ProductsController;
+}) {
   const [search, setSearch] = useState<string>("");
 
-  const [categoryId, setCategoryId] = useState<number>(0);
+  const [category, setCategory] = useState("");
+  const { products, loading, error, total, retry } = catalog;
+  const categories = [...new Set(products.map((product) => product.category))];
 
   const [sort, setSort] = useState<ProductSort>("default");
 
@@ -22,7 +31,7 @@ export function ProductCatalog({ cart }: { cart: CartController }) {
       product.name
         .toLocaleLowerCase("es")
         .includes(search.trim().toLocaleLowerCase("es")) &&
-      (categoryId === 0 || product.categoryId === categoryId),
+      (!category || product.category === category),
   );
 
   // filter crea un arreglo nuevo; sort no modifica el catálogo mock original.
@@ -35,26 +44,43 @@ export function ProductCatalog({ cart }: { cart: CartController }) {
 
   return (
     <section id="catalogo" tabIndex={-1} aria-labelledby="catalog-title">
-      <ProductFilters
-        search={search}
-        categoryId={categoryId}
-        sort={sort}
-        onSearch={setSearch}
-        onCategory={setCategoryId}
-        onSort={setSort}
-      />
+      {!loading && !error && (
+        <ProductFilters
+          search={search}
+          category={category}
+          categories={categories}
+          sort={sort}
+          onSearch={setSearch}
+          onCategory={setCategory}
+          onSort={setSort}
+        />
+      )}
       <div className="section-heading">
         <h2 id="catalog-title">Explora el catálogo</h2>
-        <span role="status">
-          {filteredProducts.length}{" "}
-          {filteredProducts.length === 1 ? "producto" : "productos"}
-        </span>
+        {!loading && !error && (
+          <span role="status">
+            {filteredProducts.length}{" "}
+            {filteredProducts.length === 1 ? "producto" : "productos"}
+          </span>
+        )}
       </div>
-      <ProductGrid
-        products={filteredProducts}
-        cartItems={cart.items}
-        onAdd={cart.addProduct}
-      />
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <ErrorMessage message={error} onRetry={retry} />
+      ) : (
+        <>
+          <p className="catalog-note">
+            Búsqueda en los {products.length} productos cargados de {total}{" "}
+            disponibles. Precios de demostración en USD, sin conversión.
+          </p>
+          <ProductList
+            products={filteredProducts}
+            cartItems={cart.items}
+            onAdd={cart.addProduct}
+          />
+        </>
+      )}
     </section>
   );
 }

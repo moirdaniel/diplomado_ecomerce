@@ -1,4 +1,3 @@
-import { categories } from "../../data/categories";
 import { Button } from "../common/Button";
 import { SearchBar } from "../common/SearchBar";
 
@@ -8,16 +7,18 @@ export type ProductSort = "default" | "price-asc" | "price-desc" | "name";
 // Así la búsqueda, la categoría y el orden siempre usan el mismo estado.
 interface ProductFiltersProps {
   search: string;
-  categoryId: number;
+  category: string;
+  categories: string[];
   sort: ProductSort;
   onSearch: (value: string) => void;
-  onCategory: (id: number) => void;
+  onCategory: (category: string) => void;
   onSort: (sort: ProductSort) => void;
 }
 
 export function ProductFilters({
   search,
-  categoryId,
+  category,
+  categories,
   sort,
   onSearch,
   onCategory,
@@ -30,15 +31,14 @@ export function ProductFilters({
         role="group"
         aria-label="Filtrar por categoría"
       >
-        {/* El ID 0 representa «Todos»; no es una categoría del catálogo. */}
-        {[{ id: 0, name: "Todos" }, ...categories].map((category) => (
+        {["", ...categories].map((value) => (
           <Button
-            key={category.id}
-            variant={categoryId === category.id ? "primary" : "secondary"}
-            aria-pressed={categoryId === category.id}
-            onClick={() => onCategory(category.id)}
+            key={value}
+            variant={category === value ? "primary" : "secondary"}
+            aria-pressed={category === value}
+            onClick={() => onCategory(value)}
           >
-            {category.name}
+            {value ? value.replaceAll("-", " ") : "Todos"}
           </Button>
         ))}
       </div>

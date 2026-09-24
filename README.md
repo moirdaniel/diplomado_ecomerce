@@ -1,19 +1,19 @@
-# Moir Games — Evaluación 2
+# Moir Market — E-commerce en React con consumo de API
 
-Proyecto académico del diplomado Full Stack Developer. Tienda de videojuegos, consolas y accesorios orientada a demostrar **componentes reutilizables, props, estado y composición en React con TypeScript**.
+Proyecto académico construido con React, TypeScript y Vite. Esta entrega obtiene los productos directamente de **DummyJSON**, permite buscar por nombre y muestra estados de carga y error.
 
-15 productos mock, seis categorías y tres medios de pago simulados. La aplicación utiliza datos e imágenes locales y no depende de backend, base de datos ni APIs externas.
+Moir Market es una tienda de productos generales. El nombre y el logo de bolsa de compras acompañan el catálogo proporcionado por la API.
 
 ## Ejecutar
 
-Requisitos: Node.js 22.12 o superior. Verificado con Node.js 24.16 y npm 11.
+Requisitos: Node.js 22.12 o superior y acceso a internet para cargar productos e imágenes.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Abre la dirección que indique Vite, normalmente http://localhost:5173. Para instalar exactamente las versiones del lockfile después de clonar, usa `npm ci`.
+Abre la URL que indica Vite. No hace falta backend propio, clave de API ni archivo `.env`.
 
 ```bash
 npm run lint
@@ -21,218 +21,97 @@ npm run build
 npm run preview
 ```
 
-Build valida TypeScript y crea `dist/`; preview permite revisar esa compilación localmente. No se requieren variables de entorno ni credenciales.
+`build` comprueba TypeScript y genera `dist/`. `preview` sirve esa compilación localmente.
 
 ## Tecnologías
 
-React 19, React DOM, TypeScript 6 estricto, Vite 8, CSS tradicional por componentes, ESLint 10.
+React 19, TypeScript 6, Vite 8, CSS por componentes, ESLint y Fetch API del navegador. No se añadió Axios: `fetch` cubre la consulta requerida.
 
-Se usa estado para navegar entre tienda y checkout. React Router no aporta valor a este ejercicio de dos vistas sin enlaces profundos. No se utiliza Redux ni librerías de animación.
+## Consumo de API
 
-## Funcionalidades
+- URL: https://dummyjson.com/products
+- Documentación: https://dummyjson.com/docs/products
+- `useProducts` ejecuta `fetch` dentro de `useEffect` y mantiene `products`, `loading`, `error` y el total informado por la API.
+- Se comprueba `response.ok` y se validan los campos usados por la interfaz. Un HTTP fallido, una respuesta inválida o un fallo de red muestran ErrorMessage.
+- La consulta tiene un límite de espera de 15 segundos. Se cancela con AbortController al desmontar y se ignoran respuestas antiguas.
+- Reintentar limpia el error y comienza una nueva consulta. No se sustituyen los fallos con productos locales.
+- App llama al hook una sola vez. Catálogo y destacados comparten los mismos datos; volver del checkout conserva el catálogo cargado.
+- En desarrollo, StrictMode puede iniciar una consulta que luego cancela antes de repetir el efecto. La limpieza evita que esa primera consulta sobrescriba la vigente.
 
-- Catálogo, destacados y búsqueda controlada por nombre.
-- Filtros Todos, PlayStation, Xbox, Nintendo, PC Gaming, Retro Gaming y Accesorios.
-- Orden por precio efectivo ascendente, descendente y nombre A-Z.
-- Precios regulares/ofertas en CLP, badges y stock.
-- Carrito: agregar, aumentar, disminuir, eliminar, vaciar y contador global.
-- Límites de stock en botones y hook. Disminuir de una unidad a cero elimina la fila.
-- Checkout con neto, IVA incluido y total.
-- Crédito, débito o Webpay simulados, sin solicitar datos bancarios.
-- Orden independiente del carrito y fecha dinámica.
-- Impresora CSS con procesamiento, impresión y finalización.
-- Boleta compuesta, impresión desde el navegador y reinicio mediante Volver a comprar.
-- Responsive, etiquetas accesibles, foco visible y movimiento reducido.
+La respuesta contiene `products`, `total`, `skip` y `limit`. Usamos la URL de la pauta sin parámetros: actualmente devuelve los primeros 30 productos. La interfaz muestra cuántos se cargaron y el total disponible. **Búsqueda, categorías y ordenamiento se aplican a la selección cargada**, sin paginación ni búsqueda remota global.
+
+`services/products.ts` adapta `title` a `name`, `thumbnail` a `image` y el precio numérico a `price.regular`. No se vuelve a aplicar `discountPercentage`; esta versión conserva el importe `price` recibido. Las categorías se extraen de los productos cargados, sin una segunda consulta. Los destacados son los primeros tres productos de esa selección, no una recomendación oficial de la API.
 
 ## Componentes creados
 
-| Componente | Responsabilidad |
+| Componente | Función |
 | --- | --- |
-| Header y Navbar | Logo, nombre y navegación de la tienda. |
-| SearchBar | Campo de búsqueda controlado mediante props. |
-| Button, Badge y CartIcon | Botones reutilizables, etiquetas e icono del carrito. |
-| ProductCatalog y ProductFilters | Estado de búsqueda, categorías y ordenamiento. |
-| ProductGrid | Lista de productos con `map` y claves por ID; cumple el papel de ProductList. |
-| ProductCard | Nombre, precio, imagen y categoría recibidos mediante props. |
-| FeaturedProducts | Selección de productos destacados usando la misma grilla. |
-| Cart, CartItem y CartSummary | Productos elegidos, cantidades y total del carrito. |
-| Checkout y CheckoutSummary | Resumen de compra y elección del pago simulado. |
-| ReceiptPrinter y PaymentStatus | Etapas de procesamiento e impresión y estado del pago. |
-| Receipt, ReceiptHeader, ReceiptItem y ReceiptTotals | Composición y presentación de la boleta. |
-| Footer | Información básica del proyecto. |
+| Header y Navbar | Logo, nombre y navegación. |
+| SearchBar | Input controlado para buscar por nombre. |
+| ProductCard | Presenta imagen, nombre, categoría, precio y stock usando props. |
+| ProductList | Renderiza las tarjetas mediante map y key por ID; reemplaza el nombre anterior ProductGrid. |
+| ProductCatalog y ProductFilters | Búsqueda, categoría, orden y elección del estado visible. |
+| Loader | Indicador accesible mientras se consulta la API. |
+| ErrorMessage | Mensaje de error y botón Reintentar. |
+| FeaturedProducts | Reutiliza ProductList con una selección de la respuesta. |
+| Button, Badge y CartIcon | Elementos reutilizables. |
+| Cart, CartItem y CartSummary | Cantidades, stock, eliminación y total. |
+| Checkout y CheckoutSummary | Revisión de compra y método de pago simulado. |
+| ReceiptPrinter y PaymentStatus | Etapas de procesamiento e impresión. |
+| Receipt, ReceiptHeader, ReceiptItem y ReceiptTotals | Composición de la boleta. |
+| Footer | Información del proyecto. |
 
-HomePage y CheckoutPage reúnen estos componentes en las dos vistas de la aplicación. Cada producto local incluye `id`, `name`, `price`, `category` e `image`; `price` agrupa precio regular y oferta opcional. `categoryId` relaciona la categoría con los filtros.
+HomePage y CheckoutPage componen las dos vistas. Se usan props y callbacks para comunicar componentes, useState para la interacción y listas derivadas para evitar duplicar el estado.
 
-## Capturas del resultado
-
-### Vista general del e-commerce
-
-![Catálogo de Moir Games con logo, categorías, productos y carrito](screenshots/catalogo.png)
-
-### Resumen y checkout
-
-![Checkout con producto seleccionado, desglose de IVA y medios de pago](screenshots/checkout.png)
-
-### Vista móvil
-
-<img src="screenshots/movil.png" alt="Catálogo de Moir Games en una pantalla móvil" width="390" />
-
-## Organización de carpetas
-
-```text
-config/             Configuración de TypeScript para aplicación y herramientas
-screenshots/        Capturas del resultado visibles en este README
-src/                Código de la aplicación y fotos de productos
-```
-
-`node_modules/` contiene dependencias instaladas y `dist/` la compilación generada; Git las ignora. En la raíz se conservan el README, los archivos de npm, `index.html` y los puntos de entrada de configuración de Vite, ESLint y TypeScript. Los comandos de ejecución se lanzan desde la raíz.
-
-## Arquitectura
+## Organización
 
 ```text
 src/
-├── assets/
-│   ├── icons/              # Iconos SVG referenciados como imágenes
-│   └── images/products/    # Fotos y portadas locales
-├── components/
-│   ├── common/              # Button, Badge, SearchBar, CartIcon
-│   ├── layout/              # Header, Navbar, Footer y CSS
-│   ├── products/            # ProductCatalog, FeaturedProducts,
-│   │                        # ProductFilters, ProductGrid, ProductCard y CSS
-│   ├── cart/                # Cart, CartItem, CartSummary y CSS
-│   └── checkout/            # Checkout, CheckoutSummary, ReceiptPrinter,
-│       │                    # PaymentStatus y CSS
-│       └── receipt/         # Receipt, ReceiptHeader, ReceiptItem, ReceiptTotals
-├── data/                    # Catálogo, categorías y medios de pago
-├── hooks/                   # useCart: estado y acciones de la compra
-├── pages/                   # HomePage y CheckoutPage
-├── styles/                  # Estilos generales
-├── types/                   # Contratos de datos compartidos
-├── utils/                   # Formato de moneda y creación de órdenes
-├── App.tsx                  # Carrito compartido y navegación
-└── main.tsx                 # Montaje con StrictMode
+  assets/        Logo e imágenes de la entrega anterior
+  components/    common, layout, products, cart y checkout/receipt
+  hooks/         useProducts y useCart
+  services/      URL y validación/adaptación de productos remotos
+  pages/         HomePage y CheckoutPage
+  data/          Medios de pago y datos históricos de la entrega anterior
+  types/         Interfaces compartidas
+  utils/         Formato de moneda y cálculo de órdenes
+  styles/        Estilos generales
+config/          Configuración TypeScript
+screenshots/     Capturas del proyecto
 ```
 
-HomePage compone la tienda completa: introducción, catálogo, destacados y carrito. CheckoutPage coordina la confirmación y el resultado de la compra.
+Los archivos históricos `src/data/products.ts`, `src/data/categories.ts` y las fotos locales se conservan como referencia de la entrega anterior, pero no se importan en el catálogo actual ni actúan como respaldo ante errores de API. `node_modules` y `dist` están excluidos de Git.
 
+## Carrito, precios y boleta
 
-## Cómo recorrer el código
+Estas funciones son adicionales a la pauta de consumo de API. `useCart` mantiene cantidades con actualizaciones inmutables y limita las unidades al stock recibido. Al confirmar, `createOrder` copia los productos y precios a una orden independiente. ReceiptPrinter pasa por procesamiento, impresión y finalización; Volver a comprar vacía el carrito.
 
-1. `App.tsx` crea un único carrito y elige entre HomePage y CheckoutPage.
-2. `HomePage` reúne las secciones de la tienda. ProductCatalog mantiene sus filtros; FeaturedProducts selecciona los destacados. Ambos reutilizan ProductGrid y ProductCard.
-3. `useCart` concentra las cantidades, los límites de stock y los totales. Los componentes llaman a sus acciones mediante props.
-4. `CheckoutPage` crea una orden independiente y activa ReceiptPrinter. El formulario Checkout recoge el medio de pago simulado.
-5. `ReceiptPrinter` controla las etapas de la simulación. Los componentes de `checkout/receipt` presentan el comprobante y sus partes.
+**Convención de demostración:** los importes se presentan como USD con dos decimales, sin convertir ni multiplicar los valores de DummyJSON. La respuesta utilizada no incluye un campo de moneda. El desglose de IVA incluido al 19% se conserva solo como ejercicio educativo; no representa información fiscal proporcionada por la API. Se redondea a centavos y el desglose no aumenta el total.
 
-Los comentarios explican por qué se usa el estado más reciente del carrito, por qué los totales se calculan al renderizar y por qué se limpian los temporizadores. Los nombres describen la responsabilidad de cada componente. Se mantienen imports directos para seguir fácilmente el recorrido de los datos.
+No se solicitan datos bancarios ni se realizan cobros. No hay persistencia, inventario compartido, cuentas ni pagos reales. Recargar reinicia el carrito. Las imágenes se cargan desde las URLs de la API y requieren conexión.
 
-## Conceptos aplicados
+## Capturas de esta entrega
 
-| Concepto | Ejemplo |
-| --- | --- |
-| Componentes | ProductCard presenta un producto. |
-| Reutilización | Button ofrece variantes primary, secondary y danger. |
-| Props | ProductCard recibe product, quantityInCart y onAdd. |
-| Estado | useCart mantiene CartItem[] mediante useState. |
-| Objetos | Cada elemento de products es un objeto Product. |
-| Interfaces | Product, Category, ProductPrice, CartItem, OrderItem, Order, Payment. |
-| Union types | Platform, OrderStatus, ReceiptPrinterStage, PaymentMethod, PaymentStatus. |
-| Listas | ProductGrid usa map con product.id como key. |
-| Condicionales | Carrito vacío, productos agotados, ofertas y compra completada. |
-| Composición | Receipt recibe ReceiptHeader, ReceiptItem[] y ReceiptTotals como children. |
-| Eventos | onClick agrega productos, onChange cambia filtros y onSubmit confirma. |
-| Inmutabilidad | map, filter y spread crean un nuevo carrito. |
-| Valores derivados | Contador, totales, productos filtrados y estado visible de pago. |
-| Efectos | ReceiptPrinter programa y limpia temporizadores con useEffect. |
+### Catálogo obtenido de DummyJSON
 
-## Estados React
+![Catálogo remoto con categorías y carrito](screenshots/api-catalogo.png)
 
-- useCart: items.
-- App: page (tienda/checkout), busy (bloqueo durante la compra), section (destino de navegación).
-- ProductCatalog: search, categoryId y sort.
-- Checkout: método de pago seleccionado.
-- CheckoutPage: purchase (Order y Payment).
-- ReceiptPrinter: stage.
+### Búsqueda por nombre
 
-Totales y listas filtradas se calculan desde estos estados, evitando copias innecesarias.
+![Búsqueda sobre los productos cargados](screenshots/api-busqueda.png)
 
-## Carrito y órdenes
+### Estado de carga
 
-useCart es la única fuente del carrito. Se ejecuta una vez en App; datos y callbacks viajan mediante props. Agregar un producto existente aumenta su cantidad hasta el stock disponible. Las actualizaciones funcionales evitan perder cambios ante clics rápidos.
+![Indicador de carga del catálogo](screenshots/api-loading.png)
 
-createOrder rechaza un carrito vacío o cantidades inválidas y transforma CartItem[] en OrderItem[]. Copia nombre, precio unitario, cantidad y subtotal; cambios posteriores en Product no alteran el comprobante. El ID se genera con crypto.randomUUID() y la fecha con new Date().
+### Error y reintento
 
-## IVA incluido y formato CLP
+![Error HTTP con opción Reintentar](screenshots/api-error.png)
 
-Los precios publicados son finales. Para Zelda ($49.990) + Mario ($39.990):
+Las capturas de carga y error se obtuvieron con respuestas demoradas y fallidas controladas durante la revisión. La consulta normal y la búsqueda se verificaron contra la API pública real.
 
-```text
-Total = 49.990 + 39.990 = 89.980
-Neto  = round(89.980 / 1,19) = 75.613
-IVA   = 89.980 - 75.613 = 14.367
-Neto + IVA = 89.980
-```
+## Verificación local
 
-calculateIncludedTax redondea a pesos enteros y calcula IVA por diferencia para conservar el total. No agrega otro 19%. Order.subtotal es el neto; OrderItem.subtotal y useCart.subtotal son importes de productos con IVA incluido. formatCurrency centraliza Intl.NumberFormat con es-CL/CLP.
+Se comprobaron catálogo real, búsqueda con y sin resultados, categoría, orden por precio, compra y reinicio. También se ensayaron carga demorada, timeout, HTTP 503, fallo de red, datos inválidos, respuesta vacía y recuperación mediante Reintentar con respuestas controladas. La revisión visual se realizó en Chromium a 1280×1000 y 390×844.
 
-## Flujo y composición
-
-```text
-Catálogo → carrito → checkout → confirmar compra simulada
-→ processing (1,2 s) → printing (2 s) → complete → boleta
-→ Volver a comprar → carrito vacío y catálogo
-```
-
-Al confirmar se crea la orden y se bloquea la navegación. ReceiptPrinter deriva Order.status (processing, printing, completed) y Payment.status (pending, approved) de stage. Todos los pagos se aprueban en la demo; rejected pertenece al modelo pero no se simula una pasarela real.
-
-Dos setTimeout cambian los estados y se cancelan al desmontar. La animación feed-paper mueve el papel desde la ranura y respeta prefers-reduced-motion.
-
-```tsx
-<Receipt>
-  <ReceiptHeader order={order} />
-  {order.items.map(item => (
-    <ReceiptItem key={item.productId} item={item} />
-  ))}
-  <ReceiptTotals order={order} />
-</Receipt>
-```
-
-La boleta es un comprobante de una compra simulada, sin validez tributaria. Imprimir boleta abre la impresión del navegador con estilos de papel de 80 mm. No controla hardware ni emite documentos tributarios.
-
-## Alcance y recursos
-
-- Datos, precios y stock ficticios; no representan disponibilidad comercial.
-- El stock limita cada carrito, pero no se descuenta de inventario entre compras.
-- Recargar reinicia la demo. No hay persistencia, cuentas, despachos ni historial.
-- El catálogo usa 15 fotografías y portadas descargadas desde sitios oficiales y guardadas localmente. Las fuentes se indican al final de este README.
-- Inspiración conceptual de la impresora: [Receipt Printer de dqnamo](https://www.dqnamo.com/experiments/receipt-printer). Implementación propia con React y CSS, sin copiar su código.
-
-## Imágenes
-
-El logo del control es un SVG creado para el proyecto en `src/assets/icons/moir-games-logo.svg`; Header lo importa como imagen independiente.
-
-Las fotos y portadas se guardan dentro de `src/assets/images/products/`. Pertenecen a sus respectivos titulares; no se declara una licencia libre de reproducción. Se utilizan como referencia en este proyecto académico, con precios y stock ficticios.
-
-| Producto o referencia | Fuente |
-| --- | --- |
-| Arte oficial de The Legend of Zelda: Tears of the Kingdom | [Nintendo](https://www.nintendo.com/us/store/products/the-legend-of-zelda-tears-of-the-kingdom-switch/) |
-| PlayStation 5 Slim con lector | [PlayStation](https://www.playstation.com/en-us/ps5/) |
-| DualSense blanco | [PlayStation](https://www.playstation.com/en-us/accessories/dualsense-wireless-controller/) |
-| Arte oficial de Super Mario Odyssey | [Nintendo](https://www.nintendo.com/us/store/products/super-mario-odyssey-switch/) |
-| Arte oficial de Marvel's Spider-Man 2 | [PlayStation](https://www.playstation.com/en-us/games/marvels-spider-man-2/) |
-| Arte oficial de God of War Ragnarök | [PlayStation](https://www.playstation.com/en-us/games/god-of-war-ragnarok/) |
-| Xbox Series X Carbon Black con control | [Xbox](https://www.xbox.com/en-US/consoles/xbox-series-x) |
-| Nintendo Switch con Joy-Con rojo y azul y empaque | [Nintendo](https://www.nintendo.com/us/store/products/nintendo-switch-neon-blue-neon-red-joy-con-117972/) |
-| Steam Deck LCD: vista frontal | [Valve](https://www.steamdeck.com/en/deck) |
-| Xbox Wireless Controller | [Xbox](https://www.xbox.com/en-US/accessories/controllers/xbox-wireless-controller) |
-| Portada de Forza Horizon 5 | [Xbox](https://www.xbox.com/games/store/forza-horizon-5-standard-edition/9nkx70bbcdrn) |
-| Logitech G413 TKL SE: modelo de referencia para el teclado genérico | [Logitech G](https://www.logitechg.com/en-ca/shop/p/g413-tkl-se-gaming-keyboard) |
-| 8BitDo SN30 Pro USB: modelo de referencia para el control retro | [8BitDo](https://shop.8bitdo.com/products/8bitdo-sn30-pro-wired-gamepad-for-switch-pc-retropie-raspberry-pi) |
-| Mayflash Wii to HDMI: modelo de referencia para el adaptador retro | [Mayflash](https://www.mayflash.com/product/wii_to_hdmi_adapter.html) |
-| Logitech G335: modelo de referencia para los audífonos | [Logitech G](https://www.logitechg.com/en-us/shop/p/g335-gaming-headset) |
-
-## Entrega y ejecución
-
-Clona este repositorio, instala las dependencias con `npm ci` y ejecuta `npm run dev`. Para comprobar el código utiliza `npm run lint` y `npm run build`.
-
-La entrega incluye código, recursos locales, configuración y este README. `node_modules` y `dist` se generan localmente y no se suben a Git. No se requieren credenciales ni un archivo `.env`.
+El comando `npm run lint` y la compilación `npm run build` deben terminar sin errores. La disponibilidad del servicio y sus imágenes depende de DummyJSON.

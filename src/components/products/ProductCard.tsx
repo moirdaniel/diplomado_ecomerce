@@ -37,7 +37,7 @@ export function ProductCard({
         {isOnSale && <Badge>Oferta</Badge>}
       </div>
       <div className="product-content">
-        <p className="platform">{product.platform}</p>
+        {product.platform && <p className="platform">{product.platform}</p>}
         <p className="product-category">Categoría: {product.category}</p>
         <h3>{product.name}</h3>
         <p className="product-description">{product.description}</p>

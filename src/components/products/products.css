@@ -148,3 +148,5 @@
   font-size: 0.75rem;
   margin-bottom: 8px;
 }
+
+.catalog-note { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; line-height: 1.6; }

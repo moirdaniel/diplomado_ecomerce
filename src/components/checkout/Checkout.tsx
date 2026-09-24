@@ -33,7 +33,7 @@ export function Checkout({ items, onConfirm, onBack }: CheckoutProps) {
       </Button>
       <h1>Finaliza tu compra</h1>
       <p className="page-description">
-        Revisa tus productos y elige un medio de pago.
+        Revisa tus productos y elige un medio de pago. Importes en USD de demostración; el desglose de IVA es una simulación educativa.
       </p>
       <div className="checkout-layout">
         <CheckoutSummary items={items} />

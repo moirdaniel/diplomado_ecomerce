@@ -19,7 +19,7 @@ export function CartSummary({
         <span>Total</span>
         <strong>{formatCurrency(total)}</strong>
       </p>
-      <small>Precios con IVA incluido.</small>
+      <small>USD de demostración. IVA incluido simulado.</small>
     </div>
   );
 }
