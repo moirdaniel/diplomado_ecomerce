@@ -23,6 +23,23 @@ npm run preview
 
 `build` comprueba TypeScript y genera `dist/`. `preview` sirve esa compilación localmente.
 
+## Publicación automática
+
+El flujo `.github/workflows/pages.yml` instala las dependencias, revisa el código y compila la tienda en GitHub Actions. Se ejecuta al subir cambios a `feat/moir-market-dummyjson` o `main`, y en pull requests hacia `main`. Si una comprobación falla, no se publica.
+
+**Solo `main` despliega en GitHub Pages.** Al integrar esta rama en `main`, una ejecución correcta publicará la tienda en [Moir Market](https://moirdaniel.github.io/diplomado_ecomerce/). Esa dirección estará disponible después del primer despliegue correcto, no al subir la rama de trabajo.
+
+GitHub Pages debe usar la fuente **GitHub Actions** en Settings → Pages. El flujo utiliza los permisos de GitHub, sin claves personales. La compilación publicada usa `--base=/diplomado_ecomerce/` para que los recursos funcionen en esa dirección; el desarrollo local mantiene su ruta habitual.
+
+Para comprobar esa compilación localmente:
+
+```bash
+npm run build -- --base=/diplomado_ecomerce/
+npm run preview -- --base=/diplomado_ecomerce/
+```
+
+Abre `/diplomado_ecomerce/` en la dirección que muestre Vite. El estado del despliegue se puede consultar en la pestaña Actions del repositorio.
+
 ## Tecnologías
 
 React 19, TypeScript 6, Vite 8, CSS por componentes, ESLint y Fetch API del navegador. No se añadió Axios: `fetch` cubre la consulta requerida.
@@ -38,7 +55,9 @@ React 19, TypeScript 6, Vite 8, CSS por componentes, ESLint y Fetch API del nave
 - App llama al hook una sola vez. Catálogo y destacados comparten los mismos datos; volver del checkout conserva el catálogo cargado.
 - En desarrollo, StrictMode puede iniciar una consulta que luego cancela antes de repetir el efecto. La limpieza evita que esa primera consulta sobrescriba la vigente.
 
-La respuesta contiene `products`, `total`, `skip` y `limit`. Usamos la URL de la pauta sin parámetros: actualmente devuelve los primeros 30 productos. La interfaz muestra cuántos se cargaron y el total disponible. **Búsqueda, categorías y ordenamiento se aplican a la selección cargada**, sin paginación ni búsqueda remota global.
+La respuesta contiene `products`, `total`, `skip` y `limit`. Consultamos el endpoint de la pauta con `?limit=0` para obtener el catálogo completo. **La paginación se realiza en React, con 12 productos por página**: primero se busca por nombre, se filtra por categoría y se ordena; después se extrae la página con `slice`. Así los filtros incluyen productos de cualquier página.
+
+Anterior, Siguiente y los números permiten navegar; los extremos se deshabilitan y el indicador muestra la página actual. Cambiar búsqueda, categoría u orden vuelve a la primera página. Con cero resultados o una sola página no aparecen controles. Cambiar de página conserva el carrito y no repite la consulta. Esta solución reduce las tarjetas renderizadas, pero descarga todos los datos inicialmente; un catálogo grande requeriría paginación del servidor con `limit` y `skip`.
 
 `services/products.ts` adapta `title` a `name`, `thumbnail` a `image` y el precio numérico a `price.regular`. No se vuelve a aplicar `discountPercentage`; esta versión conserva el importe `price` recibido. Las categorías se extraen de los productos cargados, sin una segunda consulta. Los destacados son los primeros tres productos de esa selección, no una recomendación oficial de la API.
 
@@ -51,6 +70,7 @@ La respuesta contiene `products`, `total`, `skip` y `limit`. Usamos la URL de la
 | ProductCard | Presenta imagen, nombre, categoría, precio y stock usando props. |
 | ProductList | Renderiza las tarjetas mediante map y key por ID; reemplaza el nombre anterior ProductGrid. |
 | ProductCatalog y ProductFilters | Búsqueda, categoría, orden y elección del estado visible. |
+| Pagination | Navegación accesible, página actual y límites del catálogo. |
 | Loader | Indicador accesible mientras se consulta la API. |
 | ErrorMessage | Mensaje de error y botón Reintentar. |
 | FeaturedProducts | Reutiliza ProductList con una selección de la respuesta. |
@@ -112,6 +132,6 @@ Las capturas de carga y error se obtuvieron con respuestas demoradas y fallidas 
 
 ## Verificación local
 
-Se comprobaron catálogo real, búsqueda con y sin resultados, categoría, orden por precio, compra y reinicio. También se ensayaron carga demorada, timeout, HTTP 503, fallo de red, datos inválidos, respuesta vacía y recuperación mediante Reintentar con respuestas controladas. La revisión visual se realizó en Chromium a 1280×1000 y 390×844.
+Se comprobaron catálogo real, búsqueda con y sin resultados, categoría, orden por precio, compra y reinicio. Para la paginación se verificaron 12 tarjetas por página, navegación, última página, extremos deshabilitados, búsqueda de productos fuera de la primera página, reinicio al filtrar, conservación del carrito y ausencia de consultas adicionales al navegar. También se ensayaron carga demorada, timeout, HTTP 503, fallo de red, datos inválidos, respuesta vacía y recuperación mediante Reintentar con respuestas controladas en la integración inicial. La revisión visual se realizó en Chromium a 1280×1000 y 390×844.
 
 El comando `npm run lint` y la compilación `npm run build` deben terminar sin errores. La disponibilidad del servicio y sus imágenes depende de DummyJSON.

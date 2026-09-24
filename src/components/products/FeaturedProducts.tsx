@@ -15,7 +15,7 @@ export function FeaturedProducts({
     <section className="featured-section" aria-labelledby="featured-title">
       <div className="section-heading">
         <h2 id="featured-title">Productos destacados</h2>
-        <span>Selección de esta página</span>
+        <span>Selección del catálogo</span>
       </div>
       <ProductList
         products={products}

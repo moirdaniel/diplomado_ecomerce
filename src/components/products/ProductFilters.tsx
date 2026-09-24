@@ -1,4 +1,3 @@
-import { Button } from "../common/Button";
 import { SearchBar } from "../common/SearchBar";
 
 export type ProductSort = "default" | "price-asc" | "price-desc" | "name";
@@ -26,22 +25,20 @@ export function ProductFilters({
 }: ProductFiltersProps) {
   return (
     <div className="product-filters">
-      <div
-        className="categories"
-        role="group"
-        aria-label="Filtrar por categoría"
-      >
-        {["", ...categories].map((value) => (
-          <Button
-            key={value}
-            variant={category === value ? "primary" : "secondary"}
-            aria-pressed={category === value}
-            onClick={() => onCategory(value)}
-          >
-            {value ? value.replaceAll("-", " ") : "Todos"}
-          </Button>
-        ))}
-      </div>
+      <label className="sort-label category-select">
+        Categoría
+        <select
+          value={category}
+          onChange={(event) => onCategory(event.target.value)}
+        >
+          <option value="">Todas las categorías</option>
+          {categories.map((value) => (
+            <option key={value} value={value}>
+              {value.replaceAll("-", " ")}
+            </option>
+          ))}
+        </select>
+      </label>
       <div className="search-sort">
         <SearchBar value={search} onChange={onSearch} />
         <label className="sort-label">

@@ -1,0 +1,56 @@
+name: Validar y publicar Moir Market
+
+on:
+  push:
+    branches: [main, feat/moir-market-dummyjson]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Revisar y compilar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Instalar las versiones del lockfile
+        run: npm ci
+      - name: Revisar el código
+        run: npm run lint
+      # Pages sirve la tienda dentro del nombre del repositorio.
+      # Esta base hace que los archivos CSS, JavaScript e imágenes usen esa ruta.
+      - name: Compilar para GitHub Pages
+        run: npm run build -- --base=/diplomado_ecomerce/
+      - name: Guardar la página compilada
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: dist
+
+  deploy:
+    name: Publicar en GitHub Pages
+    needs: build
+    # La rama de trabajo y los pull requests solo validan; únicamente main publica.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - name: Publicar la compilación aprobada
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
