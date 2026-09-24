@@ -1,3 +1,4 @@
+/* Colores y letra compartidos por toda la tienda para mantener el mismo diseño. */
 :root {
   font-family: Inter, "Segoe UI", Arial, sans-serif;
   color: #f4f5f6;
@@ -38,6 +39,7 @@ button:disabled {
 a {
   color: inherit;
 }
+/* El borde permite ver qué elemento está seleccionado al navegar con teclado. */
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 4px;
@@ -71,6 +73,7 @@ main {
   padding: 36px 32px 64px;
   min-height: calc(100vh - 175px);
 }
+/* En escritorio dejamos el catálogo a la izquierda y el carrito a la derecha. */
 .store-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 310px;
@@ -194,6 +197,7 @@ small {
   border-radius: 12px;
   color: var(--muted);
 }
+/* Oculta el texto visualmente, pero lo mantiene disponible para lectores de pantalla. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -220,6 +224,7 @@ small {
     gap: 20px;
   }
 }
+/* Cuando falta espacio, el carrito pasa debajo del catálogo. */
 @media (max-width: 850px) {
   .store-layout {
     grid-template-columns: 1fr;

@@ -22,6 +22,7 @@ export function parseProductsResponse(value: unknown): {
   ) {
     throw new Error("La API devolvió un formato de catálogo inesperado.");
   }
+
   // Guardamos los identificadores que ya vimos para detectar productos repetidos.
   const ids = new Set<number>();
   const products = value.products.map((item: unknown): Product => {
@@ -53,7 +54,7 @@ export function parseProductsResponse(value: unknown): {
       name: item.title,
       description: typeof item.description === "string" ? item.description : "",
       category: item.category,
-      price: { regular: item.price },
+      price: item.price,
       stock: item.stock,
       image: item.thumbnail,
     };

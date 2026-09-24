@@ -1,6 +1,7 @@
 // Los identificadores se usan en el código; sus textos en español
 // están centralizados en data/payments.ts. No contienen datos bancarios.
 export type PaymentMethod = "credit-card" | "debit-card" | "webpay";
+
 // rejected forma parte del modelo, aunque la demo solo simula aprobaciones.
 export type PaymentStatus = "pending" | "approved" | "rejected";
 

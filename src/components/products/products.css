@@ -1,3 +1,4 @@
+/* El catálogo distribuye las tarjetas en columnas con el mismo espacio entre ellas. */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -16,6 +17,7 @@
   position: relative;
   padding: 12px 12px 0;
 }
+/* Las fotos caben completas en un área uniforme, sin recortar el producto. */
 .product-art img {
   display: block;
   width: 100%;

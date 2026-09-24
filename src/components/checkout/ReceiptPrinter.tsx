@@ -25,7 +25,7 @@ interface ReceiptPrinterProps {
   onComplete: () => void;
 }
 
-/** Secuencia local de demostración; ambos temporizadores se limpian al desmontar. */
+// Secuencia local de demostración; ambos temporizadores se limpian al desmontar.
 export function ReceiptPrinter({
   order,
   payment,
@@ -34,10 +34,10 @@ export function ReceiptPrinter({
   const [stage, setStage] = useState<ReceiptPrinterStage>("processing");
 
   useEffect(() => {
-    
+
     const printingTimer = window.setTimeout(() => setStage("printing"), 1200);
     const completeTimer = window.setTimeout(() => setStage("complete"), 3200);
-    
+
     // Si se desmonta el componente, cancelamos los cambios pendientes.
     // Esto también permite montarlo de nuevo sin temporizadores sobrantes.
     return () => {
@@ -49,12 +49,12 @@ export function ReceiptPrinter({
   // Una sola etapa controla mensaje, animación y estados visibles.
   // La aprobación es parte de la demo: aquí no se contacta una pasarela.
   const currentOrder: Order = { ...order, status: orderStatuses[stage] };
-  
+
   const currentPayment: Payment = {
     ...payment,
     status: stage === "processing" ? "pending" : "approved",
   };
-  
+
   const message =
     stage === "processing"
       ? "Procesando tu compra"

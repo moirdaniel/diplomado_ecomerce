@@ -17,6 +17,7 @@ export function useProducts() {
     const controller = new AbortController();
     let cancelled = false;
     let timedOut = false;
+
     // Si la API no responde en 15 segundos, dejamos de esperar y avisamos al usuario.
     const timeout = window.setTimeout(() => {
       timedOut = true;
@@ -28,6 +29,7 @@ export function useProducts() {
         const response = await fetch(PRODUCTS_URL, {
           signal: controller.signal,
         });
+
         // fetch puede recibir una respuesta de error del servidor sin lanzar una excepción.
         // Por eso revisamos también si la respuesta fue exitosa.
         if (!response.ok)
@@ -35,8 +37,10 @@ export function useProducts() {
             `No se pudo cargar el catálogo (HTTP ${response.status}).`,
           );
         const data: unknown = await response.json();
+
         // Revisamos los datos y los adaptamos al formato que usan nuestras tarjetas.
         const result = parseProductsResponse(data);
+
         if (!cancelled) {
           setProducts(result.products);
           setTotal(result.total);
@@ -78,4 +82,5 @@ export function useProducts() {
   };
   return { products, loading, error, total, retry };
 }
+
 export type ProductsController = ReturnType<typeof useProducts>;

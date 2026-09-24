@@ -1,3 +1,4 @@
+/* Separamos el resumen de productos y las opciones de pago en dos columnas. */
 .checkout-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
@@ -136,6 +137,7 @@ legend {
 .printer--printing .printer-light {
   animation: pulse 0.6s infinite alternate;
 }
+/* Escondemos la parte del papel que todavía no ha salido de la impresora. */
 .paper-output {
   overflow: hidden;
   padding: 0 22px 8px;
@@ -152,6 +154,7 @@ legend {
     0.78rem/1.6 "Courier New",
     monospace;
   box-shadow: 0 8px 14px #0004;
+  /* Estos puntos dibujan el borde dentado de una boleta de papel. */
   clip-path: polygon(
     0 0,
     100% 0,
@@ -246,6 +249,7 @@ legend {
   gap: 12px;
   margin-top: 28px;
 }
+/* Deslizamos la boleta hacia abajo para simular que sale de la impresora. */
 @keyframes feed-paper {
   from {
     transform: translateY(-103%);
@@ -289,6 +293,7 @@ legend {
     padding: 18px;
   }
 }
+/* Al imprimir desde el navegador ocultamos los controles y dejamos la boleta. */
 @media print {
   :root {
     color: black;

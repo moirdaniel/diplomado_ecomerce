@@ -1,3 +1,4 @@
+/* Agrupamos los botones debajo de los productos y destacamos la página actual. */
 .pagination {
   margin-top: 24px;
   text-align: center;
@@ -25,12 +26,14 @@
 .pagination-item {
   color: var(--muted);
 }
+/* Dejamos espacio para que la cabecera fija no tape el título al cambiar de página. */
 #catalog-title {
   scroll-margin-top: 140px;
 }
 .category-select {
   width: min(100%, 300px);
 }
+/* En móvil los números van en una fila y Anterior/Siguiente en otra. */
 @media (max-width: 520px) {
   .pagination-numbers {
     order: -1;
