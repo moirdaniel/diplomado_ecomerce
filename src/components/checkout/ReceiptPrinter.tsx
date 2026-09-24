@@ -79,7 +79,7 @@ export function ReceiptPrinter({
       </ol>
       <div className={`printer printer--${stage}`}>
         <div className="printer-machine">
-          <span>MOIR GAMES</span>
+          <span>MOIR MARKET</span>
           <span className="printer-light" />
           <div className="printer-slot" />
         </div>
@@ -104,7 +104,7 @@ export function ReceiptPrinter({
             <p className="receipt-thanks">
               ¡Gracias por comprar!
               <br />
-              <strong>GAME ON</strong>
+              <strong>Gracias por elegirnos</strong>
             </p>
           </Receipt>
         </div>

@@ -1,5 +1,3 @@
-import { categories } from "../../data/categories";
-import { Button } from "../common/Button";
 import { SearchBar } from "../common/SearchBar";
 
 export type ProductSort = "default" | "price-asc" | "price-desc" | "name";
@@ -8,16 +6,18 @@ export type ProductSort = "default" | "price-asc" | "price-desc" | "name";
 // Así la búsqueda, la categoría y el orden siempre usan el mismo estado.
 interface ProductFiltersProps {
   search: string;
-  categoryId: number;
+  category: string;
+  categories: string[];
   sort: ProductSort;
   onSearch: (value: string) => void;
-  onCategory: (id: number) => void;
+  onCategory: (category: string) => void;
   onSort: (sort: ProductSort) => void;
 }
 
 export function ProductFilters({
   search,
-  categoryId,
+  category,
+  categories,
   sort,
   onSearch,
   onCategory,
@@ -25,23 +25,20 @@ export function ProductFilters({
 }: ProductFiltersProps) {
   return (
     <div className="product-filters">
-      <div
-        className="categories"
-        role="group"
-        aria-label="Filtrar por categoría"
-      >
-        {/* El ID 0 representa «Todos»; no es una categoría del catálogo. */}
-        {[{ id: 0, name: "Todos" }, ...categories].map((category) => (
-          <Button
-            key={category.id}
-            variant={categoryId === category.id ? "primary" : "secondary"}
-            aria-pressed={categoryId === category.id}
-            onClick={() => onCategory(category.id)}
-          >
-            {category.name}
-          </Button>
-        ))}
-      </div>
+      <label className="sort-label category-select">
+        Categoría
+        <select
+          value={category}
+          onChange={(event) => onCategory(event.target.value)}
+        >
+          <option value="">Todas las categorías</option>
+          {categories.map((value) => (
+            <option key={value} value={value}>
+              {value.replaceAll("-", " ")}
+            </option>
+          ))}
+        </select>
+      </label>
       <div className="search-sort">
         <SearchBar value={search} onChange={onSearch} />
         <label className="sort-label">

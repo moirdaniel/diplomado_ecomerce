@@ -1,0 +1,40 @@
+.pagination {
+  margin-top: 24px;
+  text-align: center;
+}
+.pagination p {
+  color: var(--muted);
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}
+.pagination-controls,
+.pagination-numbers,
+.pagination-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.pagination-controls {
+  flex-wrap: wrap;
+}
+.pagination .button {
+  min-width: 40px;
+  padding: 10px;
+}
+.pagination-item {
+  color: var(--muted);
+}
+#catalog-title {
+  scroll-margin-top: 140px;
+}
+.category-select {
+  width: min(100%, 300px);
+}
+@media (max-width: 520px) {
+  .pagination-numbers {
+    order: -1;
+    flex-basis: 100%;
+    margin-bottom: 6px;
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useProducts } from "./hooks/useProducts";
 import { useCart } from "./hooks/useCart";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
@@ -12,6 +13,7 @@ type Page = "store" | "checkout";
 // datos y acciones por props; no crean carritos independientes.
 export default function App() {
   const cart = useCart();
+  const catalog = useProducts();
   const [page, setPage] = useState<Page>("store");
   const [busy, setBusy] = useState(false);
   const [section, setSection] = useState("inicio");
@@ -25,7 +27,6 @@ export default function App() {
 
     target?.focus({ preventScroll: true });
     target?.scrollIntoView({ block: "start" });
-
   }, [page, section]);
 
   const navigate = (target: string) => {
@@ -55,7 +56,11 @@ export default function App() {
       />
       <main id="main-content" tabIndex={-1}>
         {page === "store" ? (
-          <HomePage cart={cart} onCheckout={() => setPage("checkout")} />
+          <HomePage
+            catalog={catalog}
+            cart={cart}
+            onCheckout={() => setPage("checkout")}
+          />
         ) : (
           <CheckoutPage
             cart={cart}

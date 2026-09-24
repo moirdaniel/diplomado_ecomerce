@@ -5,7 +5,7 @@ import type { Order } from "../../../types/Order";
 export function ReceiptHeader({ order }: { order: Order }) {
   return (
     <header className="receipt-header">
-      <h2>MOIR GAMES</h2>
+      <h2>MOIR MARKET</h2>
       <p>
         Comprobante de pago
         <br />

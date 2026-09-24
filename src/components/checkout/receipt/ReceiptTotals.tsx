@@ -16,7 +16,7 @@ export function ReceiptTotals({
         <dd>{formatCurrency(order.subtotal)}</dd>
       </div>
       <div>
-        <dt>IVA incluido (19%)</dt>
+        <dt>IVA simulado (19%)</dt>
         <dd>{formatCurrency(order.tax)}</dd>
       </div>
       <div className="total-line">

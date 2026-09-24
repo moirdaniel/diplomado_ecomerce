@@ -2,7 +2,7 @@ import type { Product } from "../../types/Product";
 import type { CartItem } from "../../types/Cart";
 import { ProductCard } from "./ProductCard";
 
-interface ProductGridProps {
+interface ProductListProps {
   products: Product[];
   cartItems: CartItem[];
   onAdd: (product: Product) => void;
@@ -10,7 +10,7 @@ interface ProductGridProps {
 
 // La grilla presenta la lista que recibe, tanto filtrada como destacada.
 // Cada tarjeta conoce su cantidad en el carrito para respetar el stock.
-export function ProductGrid({ products, cartItems, onAdd }: ProductGridProps) {
+export function ProductList({ products, cartItems, onAdd }: ProductListProps) {
   if (products.length === 0)
     return (
       <p className="empty-state">
