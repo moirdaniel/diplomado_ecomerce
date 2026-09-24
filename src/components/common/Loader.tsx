@@ -1,5 +1,7 @@
 import "./feedback.css";
 
+// Se muestra mientras esperamos los productos. El texto también permite
+// entender la carga sin depender del círculo animado.
 export function Loader() {
   return (
     <div className="catalog-feedback" role="status" aria-live="polite">

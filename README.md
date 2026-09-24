@@ -59,7 +59,7 @@ La respuesta contiene `products`, `total`, `skip` y `limit`. Consultamos el endp
 
 Anterior, Siguiente y los números permiten navegar; los extremos se deshabilitan y el indicador muestra la página actual. Cambiar búsqueda, categoría u orden vuelve a la primera página. Con cero resultados o una sola página no aparecen controles. Cambiar de página conserva el carrito y no repite la consulta. Esta solución reduce las tarjetas renderizadas, pero descarga todos los datos inicialmente; un catálogo grande requeriría paginación del servidor con `limit` y `skip`.
 
-`services/products.ts` adapta `title` a `name`, `thumbnail` a `image` y el precio numérico a `price.regular`. No se vuelve a aplicar `discountPercentage`; esta versión conserva el importe `price` recibido. Las categorías se extraen de los productos cargados, sin una segunda consulta. Los destacados son los primeros tres productos de esa selección, no una recomendación oficial de la API.
+`services/products.ts` adapta `title` a `name`, `thumbnail` a `image` y conserva el precio como un número en `price`. No se vuelve a aplicar `discountPercentage`; esta versión conserva el importe `price` recibido. Las categorías se extraen de los productos cargados, sin una segunda consulta. Los destacados son los primeros tres productos de esa selección, no una recomendación oficial de la API.
 
 ## Componentes creados
 
@@ -92,7 +92,7 @@ src/
   hooks/         useProducts y useCart
   services/      URL y validación/adaptación de productos remotos
   pages/         HomePage y CheckoutPage
-  data/          Medios de pago y datos históricos de la entrega anterior
+  data/          Medios de pago de la compra simulada
   types/         Interfaces compartidas
   utils/         Formato de moneda y cálculo de órdenes
   styles/        Estilos generales
@@ -100,7 +100,7 @@ config/          Configuración TypeScript
 screenshots/     Capturas del proyecto
 ```
 
-Los archivos históricos `src/data/products.ts`, `src/data/categories.ts` y las fotos locales se conservan como referencia de la entrega anterior, pero no se importan en el catálogo actual ni actúan como respaldo ante errores de API. `node_modules` y `dist` están excluidos de Git.
+Se retiraron los datos locales de productos y categorías de la entrega anterior. Product contiene solo id, nombre, descripción, precio, imagen, categoría y stock. Las fotos históricas siguen en assets, pero no se importan en el catálogo ni actúan como respaldo ante errores de API. `node_modules` y `dist` están excluidos de Git.
 
 ## Carrito, precios y boleta
 

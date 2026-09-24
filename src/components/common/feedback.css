@@ -1,3 +1,4 @@
+/* La carga y el error comparten el mismo espacio y estilo de panel. */
 .catalog-feedback {
   padding: 36px 20px;
   text-align: center;
@@ -28,6 +29,7 @@
     transform: rotate(360deg);
   }
 }
+/* Respetamos la preferencia del dispositivo de reducir las animaciones. */
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner {
     animation: none;

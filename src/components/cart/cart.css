@@ -1,3 +1,4 @@
+/* El carrito acompaña el desplazamiento en escritorio y tiene su propio scroll si crece. */
 .cart-panel {
   position: sticky;
   top: 104px;
@@ -96,6 +97,7 @@
 .clear-cart {
   margin-top: 10px;
 }
+/* En pantallas pequeñas el carrito vuelve al flujo normal de la página. */
 @media (max-width: 850px) {
   .cart-panel {
     position: static;

@@ -3,7 +3,7 @@ import type { CartItem } from "../types/Cart";
 import type { Product } from "../types/Product";
 import { getProductPrice } from "../utils/order";
 
-/** Única fuente de estado del carrito; actualizaciones inmutables y stock limitado. */
+// Única fuente de estado del carrito; actualizaciones inmutables y stock limitado.
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
 
@@ -47,7 +47,7 @@ export function useCart() {
   };
 
   const clearCart = () => setItems([]);
-  
+
   // Los totales salen de los artículos actuales; guardarlos por separado
   // obligaría a actualizarlos en cada operación y podría desajustarlos.
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);

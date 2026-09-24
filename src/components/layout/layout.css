@@ -1,3 +1,4 @@
+/* La cabecera queda visible al bajar para mantener la navegación a mano. */
 .site-header {
   position: sticky;
   top: 0;
@@ -70,6 +71,7 @@
     padding: 12px 20px;
   }
 }
+/* En móvil colocamos la navegación en otra fila para que no se amontone. */
 @media (max-width: 520px) {
   .header-content {
     gap: 8px;

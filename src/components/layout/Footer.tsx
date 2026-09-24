@@ -1,3 +1,4 @@
+// El pie identifica la tienda y recuerda que se trata de un proyecto académico.
 export function Footer() {
   return (
     <footer className="site-footer">

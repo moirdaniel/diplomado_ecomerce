@@ -9,11 +9,12 @@ export interface OrderItem {
 }
 
 // La orden describe el estado de la compra; ReceiptPrinterStage describe
-// la etapa visual de la impresora. ReceiptPrinter relaciona ambos valores.
 export type OrderStatus = "pending" | "processing" | "printing" | "completed";
+
+// la etapa visual de la impresora. ReceiptPrinter relaciona ambos valores.
 export type ReceiptPrinterStage = "processing" | "printing" | "complete";
 
-/** Snapshot independiente del carrito. Subtotal es el neto sin IVA. */
+// Snapshot independiente del carrito. Subtotal es el neto sin IVA.
 export interface Order {
   id: string;
   items: OrderItem[];
